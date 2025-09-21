@@ -97,11 +97,5 @@ SORRISO METÁLICO. *Quem somos*. Disponível em: <https://dentistasorrisometalic
 
 ---
 
-## 📫 Contato
-
-- **LinkedIn:** [linkedin.com/in/marcosassuncao](https://www.linkedin.com/in/marcosassuncao)  
-- **E-mail:** marcos.assuncao@email.com  
-
----
 
 *Este repositório integra o Projeto Integrador III da FATEC Ipiranga, unindo análise institucional, Business Intelligence e técnicas de Big Data aplicadas ao setor odontológico.*
