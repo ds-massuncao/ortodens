@@ -21,6 +21,7 @@ Este repositório apresenta o **Projeto Integrador III** do curso de **Big Data 
 
 ## 📌 Sumário
 
+- [Integrantes do Projeto](#-integrantes-do-projeto)
 - [Sobre o Projeto](#-sobre-o-projeto)  
 - [Sobre a Empresa](#-sobre-a-empresa)  
 - [Objetivo da Empresa](#-objetivo-da-empresa)  
@@ -28,6 +29,15 @@ Este repositório apresenta o **Projeto Integrador III** do curso de **Big Data 
 - [Aplicação de Business Intelligence](#-aplicação-de-business-intelligence)  
 - [Referência](#-referência)  
 - [Contato](#-contato)  
+
+---
+## Integrantes do Projeto
+
+**Bruno Pereira de Souza Costa** - 2041382421009</br>
+**Cauan Santos Alves Jacinto** - 2041382421026</br>
+**Jadilson de Souza Cardoso** - 2041382421011</br>
+**Marcos Assunção da Silva** - 2041382421038</br>
+**Renato Fidelis Fausto Silva** - 2041382421008</br>
 
 ---
 
