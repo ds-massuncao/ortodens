@@ -36,10 +36,11 @@ CREATE TABLE tb_dentista (
 
 -- tabela status do paciente
 DROP TABLE if EXISTS tb_status_paciente CASCADE;
+DROP SEQUENCE tb_status_paciente_seq;
 CREATE SEQUENCE tb_status_paciente_seq;
 CREATE TABLE tb_status_paciente (
-    id_status_paciente SERIAL NOT NULL DEFAULT nextval('tb_status_paciente_seq'),
-    status_paciente VARCHAR NOT NULL,
+    id_status_paciente SERIAL NOT NULL,
+    nome_status VARCHAR(50) NOT NULL,
     CONSTRAINT tb_status_paciente_pk PRIMARY KEY (id_status_paciente)
 );
 
@@ -51,7 +52,7 @@ DROP TABLE if EXISTS tb_convenio CASCADE;
 DROP SEQUENCE tb_convenio_seq;
 CREATE SEQUENCE tb_convenio_seq;
 CREATE TABLE tb_convenio (
-    id_convenio SERIAL NOT NULL DEFAULT nextval('tb_convenio_seq'),
+    id_convenio SERIAL NOT NULL,
     nome_convenio VARCHAR NOT NULL,
     CONSTRAINT tb_convenio_pk PRIMARY KEY (id_convenio)
 );
@@ -97,16 +98,16 @@ DROP SEQUENCE tb_agenda_seq;
 CREATE SEQUENCE tb_agenda_seq;
 
 CREATE TABLE tb_agenda (
-    id_agenda SERIAL NOT NULL DEFAULT nextval('tb_agenda_seq'),
+    id_agenda SERIAL NOT NULL,
     id_paciente VARCHAR(20) NOT NULL,
-    id_dentista VARCHAR(11) NOT NULL,
+    cro_dentista VARCHAR(11) NOT NULL,
     id_unidade VARCHAR(15) NOT NULL,
     data_agenda DATE NOT NULL,
     hora_agenda TIME NOT NULL,
-    CONSTRAINT tb_agenda_pk PRIMARY KEY (id_agenda),
-    CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente),
-    CONSTRAINT id_dentista_fk FOREIGN KEY (id_dentista),
-    CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade)
+    CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente) REFERENCES tb_paciente (id_paciente),
+    CONSTRAINT cro_dentista_fk FOREIGN KEY (cro_dentista) REFERENCES tb_dentista (cro_dentista),
+    CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade),
+    CONSTRAINT tb_agenda_pk PRIMARY KEY (id_agenda)
 );
 
 ----------------------------------------
@@ -114,17 +115,19 @@ CREATE TABLE tb_agenda (
 ----------------------------------------
 
 DROP TABLE if EXISTS tb_pagamento CASCADE;
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
 CREATE TABLE tb_pagamento (
-    id_pagamento SERIAL NOT NULL DEFAULT gen_random_uuid(),
+    id_pagamento UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_paciente VARCHAR(20) NOT NULL,
     id_convenio SMALLINT NOT NULL,
     data_pagamento DATE NOT NULL,
     valor_pagamento DECIMAL(10,2) NOT NULL,
-    CONSTRAINT tb_pagamento_pk PRIMARY KEY (id_pagamento),
-    CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente) REFERENCES tb_paciente,
-    CONSTRAINT id_convenio_fk FOREIGN KEY (id_convenio) REFERENCES tb_convenio
+    CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente) REFERENCES tb_paciente (id_paciente),
+    CONSTRAINT id_convenio_fk FOREIGN KEY (id_convenio) REFERENCES tb_convenio (id_convenio)
 );
+
 
 
 ----------------------------------------
@@ -132,6 +135,7 @@ CREATE TABLE tb_pagamento (
 ----------------------------------------
 DROP TABLE if EXISTS tb_fornecedor CASCADE;
 
+DROP SEQUENCE tb_fornecedor_seq;
 CREATE SEQUENCE tb_fornecedor_seq;
 
 CREATE TABLE tb_fornecedor (
@@ -153,11 +157,11 @@ CREATE TABLE tb_fornecedor (
 ----------------------------------------
 
 DROP TABLE if EXISTS tb_produtos CASCADE;
-
+DROP SEQUENCE tb_produtos_seq;
 CREATE SEQUENCE tb_produtos_seq;
 
 CREATE TABLE tb_produtos (
-    id_produto SERIAL NOT NULL DEFAULT nextval('tb_produtos_seq'),
+    id_produto SERIAL NOT NULL,
     nome_produto VARCHAR(200) NOT NULL,
     descricao_produto VARCHAR(500) NOT NULL,
     preco_produto DECIMAL(10,2) NOT NULL,
@@ -170,9 +174,10 @@ CREATE TABLE tb_produtos (
 ----------------------------------------
 
 DROP TABLE if EXISTS tb_compras CASCADE;
+DROP SEQUENCE tb_compras_seq;
 CREATE SEQUENCE tb_compras_seq;
 CREATE TABLE tb_compras (
-    id_compra SERIAL NOT NULL DEFAULT nextval('tb_compras_seq'),
+    id_compra SERIAL NOT NULL,
     id_fornecedor SMALLINT NOT NULL,
     id_produto SMALLINT NOT NULL,
     quantidade_compra SMALLINT NOT NULL,
@@ -189,9 +194,10 @@ CREATE TABLE tb_compras (
 ----------------------------------------
 
 DROP TABLE if EXISTS tb_laboratorio CASCADE;
+DROP SEQUENCE tb_laboratorio_seq;
 CREATE SEQUENCE tb_laboratorio_seq;
 CREATE TABLE tb_laboratorio (
-    id_laboratorio SERIAL NOT NULL DEFAULT nextval('tb_laboratorio_seq'),
+    id_laboratorio SERIAL NOT NULL,
     nome_laboratorio VARCHAR(200) NOT NULL,
     endereco_laboratorio VARCHAR(200) NOT NULL,
     bairro_laboratorio VARCHAR(50) NOT NULL,
@@ -209,9 +215,10 @@ CREATE TABLE tb_laboratorio (
 ----------------------------------------
 
 DROP TABLE if EXISTS tb_procedimento CASCADE;
+DROP SEQUENCE tb_procedimento_seq;
 CREATE SEQUENCE tb_procedimento_seq;
 CREATE TABLE tb_procedimento (
-    id_procedimento SERIAL NOT NULL DEFAULT nextval('tb_procedimento_seq'),
+    id_procedimento SERIAL NOT NULL,
     nome_procedimento VARCHAR(200) NOT NULL,
     descricao_procedimento VARCHAR(500) NOT NULL,
     preco_procedimento DECIMAL(10,2) NOT NULL,
@@ -223,9 +230,11 @@ CREATE TABLE tb_procedimento (
 ----------------------------------------
 
 DROP TABLE if EXISTS tb_instrumental CASCADE;
+
+DROP SEQUENCE tb_instrumental_seq;  
 CREATE SEQUENCE tb_instrumental_seq;
 CREATE TABLE tb_instrumental (
-    id_instrumental SERIAL NOT NULL DEFAULT nextval('tb_instrumental_seq'),
+    id_instrumental SERIAL NOT NULL,
     id_produto SMALLINT NOT NULL,
     id_procedimento SMALLINT NOT NULL,
     quantidade_produto SMALLINT NOT NULL,
@@ -239,9 +248,11 @@ CREATE TABLE tb_instrumental (
 ----------------------------------------
 
 DROP TABLE if EXISTS tb_servico_externo CASCADE;
+
+DROP SEQUENCE tb_servico_externo_seq;
 CREATE SEQUENCE tb_servico_externo_seq; 
 CREATE TABLE tb_servico_externo (
-    id_servico_externo SERIAL NOT NULL DEFAULT nextval('tb_servico_externo_seq'),
+    id_servico_externo SERIAL NOT NULL,
     id_laboratorio SMALLINT NOT NULL,
     id_procedimento SMALLINT NOT NULL,
     nome_servico_externo VARCHAR(200) NOT NULL,
@@ -258,12 +269,12 @@ CREATE TABLE tb_servico_externo (
 ----------------------------------------
 
 DROP TABLE if EXISTS tb_consulta CASCADE;
+DROP SEQUENCE tb_consulta_seq;
 CREATE SEQUENCE tb_consulta_seq;
 
 CREATE TABLE tb_consulta (
-    id_consulta SERIAL NOT NULL DEFAULT 
-    'PRONTUARIO - ' || TO_CHAR(nextval('tb_consulta_seq'::regclass), 'FM0000'),
-    Id_dentista VARCHAR(11) NOT NULL,
+    id_consulta SERIAL NOT NULL,
+    cro_dentista VARCHAR(11) NOT NULL,
     id_paciente VARCHAR(20) NOT NULL,
     id_unidade VARCHAR(15) NOT NULL,
     id_procedimento SMALLINT NOT NULL,
@@ -271,7 +282,7 @@ CREATE TABLE tb_consulta (
     hora_consulta TIME NOT NULL,
     descricao_consulta VARCHAR(500) NOT NULL,
     CONSTRAINT tb_consulta_pk PRIMARY KEY (id_consulta),
-    CONSTRAINT id_dentista_fk FOREIGN KEY (id_dentista) REFERENCES tb_dentista (id_dentista),
+    CONSTRAINT cro_dentista_fk FOREIGN KEY (cro_dentista) REFERENCES tb_dentista (cro_dentista),
     CONSTRAINT id_procedimento_fk FOREIGN KEY (id_procedimento) REFERENCES tb_procedimento (id_procedimento),
     CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente) REFERENCES tb_paciente (id_paciente),
     CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade)
@@ -281,11 +292,12 @@ CREATE TABLE tb_consulta (
 -- TABELA EXAME
 ----------------------------------------
 DROP TABLE if EXISTS tb_exame CASCADE;
+DROP SEQUENCE tb_exame_seq;
 CREATE SEQUENCE tb_exame_seq;
 CREATE TABLE tb_exame (
-    id_exame SERIAL NOT NULL DEFAULT nextval('tb_exame_seq'),
+    id_exame SERIAL NOT NULL,
     id_consulta SMALLINT NOT NULL,
-    id_dentista VARCHAR(11) NOT NULL,
+    cro_dentista VARCHAR(11) NOT NULL,
     id_paciente VARCHAR(20) NOT NULL,
     id_unidade VARCHAR(15) NOT NULL,    
     id_servico_externo SMALLINT NOT NULL,
@@ -295,7 +307,7 @@ CREATE TABLE tb_exame (
     descricao_exame VARCHAR(500) NOT NULL,
     CONSTRAINT tb_exame_pk PRIMARY KEY (id_exame),
     CONSTRAINT id_consulta_fk FOREIGN KEY (id_consulta) REFERENCES tb_consulta (id_consulta),
-    CONSTRAINT id_dentista_fk FOREIGN KEY (id_dentista) REFERENCES tb_dentista (id_dentista),
+    CONSTRAINT cro_dentista_fk FOREIGN KEY (cro_dentista) REFERENCES tb_dentista (cro_dentista),
     CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente) REFERENCES tb_paciente (id_paciente),
     CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade),
     CONSTRAINT id_servico_externo_fk FOREIGN KEY (id_servico_externo) REFERENCES tb_servico_externo (id_servico_externo)
@@ -307,17 +319,18 @@ CREATE TABLE tb_exame (
 ----------------------------------------
 
 DROP TABLE if EXISTS tb_fluxo_caixa CASCADE;
+
+DROP SEQUENCE tb_fluxo_caixa_seq;
 CREATE SEQUENCE tb_fluxo_caixa_seq;
 CREATE TABLE tb_fluxo_caixa (
-    id_fluxo_caixa SERIAL NOT NULL DEFAULT nextval('tb_fluxo_caixa_seq'),
+    id_fluxo_caixa SERIAL PRIMARY KEY,
     id_compra SMALLINT NOT NULL,
-    id_pagamento SMALLINT NOT NULL,
+    id_pagamento UUID NOT NULL,
     id_exame SMALLINT NOT NULL,
     id_servico_externo SMALLINT NOT NULL,
     id_consulta SMALLINT NOT NULL,
     data_fluxo_caixa DATE NOT NULL,
     valor_fluxo_caixa DECIMAL(10,2) NOT NULL,
-    CONSTRAINT tb_fluxo_caixa_pk PRIMARY KEY (id_fluxo_caixa),
     CONSTRAINT id_compra_fk FOREIGN KEY (id_compra) REFERENCES tb_compras (id_compra),
     CONSTRAINT id_pagamento_fk FOREIGN KEY (id_pagamento) REFERENCES tb_pagamento (id_pagamento),
     CONSTRAINT id_exame_fk FOREIGN KEY (id_exame) REFERENCES tb_exame (id_exame),
@@ -325,35 +338,17 @@ CREATE TABLE tb_fluxo_caixa (
     CONSTRAINT id_consulta_fk FOREIGN KEY (id_consulta) REFERENCES tb_consulta (id_consulta)
 );
 
+
 ----------------------------------------
 -- TABELA USUARIOS
 ----------------------------------------
 DROP TABLE iF EXISTS tb_usuario CASCADE;
+DROP SEQUENCE tb_usuario_seq;
 CREATE SEQUENCE tb_usuario_seq;
 CREATE TABLE tb_usuario (
-    id_usuario SERIAL NOT NULL DEFAULT nextval('tb_usuario_seq'),
+    id_usuario SERIAL NOT NULL,
     nome_usuario VARCHAR(200) NOT NULL,
     email_usuario VARCHAR(200) NOT NULL,
     senha_usuario VARCHAR(200) NOT NULL,
     CONSTRAINT tb_usuario_pk PRIMARY KEY (id_usuario)
 );
-
-
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
