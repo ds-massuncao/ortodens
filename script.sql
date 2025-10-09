@@ -2,7 +2,7 @@
 SET DATESTYLE TO POSTGRES, DMY ;
 
 ----------------------------------------
--- Tabela Unidade
+-- TABELA UNIDADE
 ----------------------------------------
 DROP TABLE if EXISTS tb_unidade CASCADE;
 DROP SEQUENCE tb_unidade_seq;
@@ -22,7 +22,9 @@ CREATE TABLE tb_unidade (
 );
 
 
---tabela dentistas
+----------------------------------------
+-- TABEAL DENTISTAS
+----------------------------------------
 DROP TABLE if EXISTS tb_dentista CASCADE;
 DROP SEQUENCE tb_dentista_seq;
 CREATE SEQUENCE tb_dentista_seq;
@@ -42,7 +44,7 @@ CREATE TABLE tb_status_paciente (
 );
 
 ----------------------------------------
--- Tabela Convenios
+-- Tabela CONVENIOS
 ----------------------------------------
 
 DROP TABLE if EXISTS tb_convenio CASCADE;
@@ -55,7 +57,7 @@ CREATE TABLE tb_convenio (
 );
 
 ----------------------------------------
--- TABELA PACIENTE
+-- TABELA PACIENTES
 ----------------------------------------
 DROP TABLE if EXISTS tb_paciente CASCADE;
 DROP SEQUENCE tb_paciente_seq;
@@ -85,24 +87,9 @@ CREATE TABLE tb_paciente (
     CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade),
     CONSTRAINT id_convenio_fk FOREIGN KEY (id_convenio) REFERENCES tb_convenio (id_convenio)
 );
-);
-
 
 ----------------------------------------
--- Tabela Convenios
-----------------------------------------
-
-DROP TABLE if EXISTS tb_convenio CASCADE;
-DROP SEQUENCE tb_convenio_seq;
-CREATE SEQUENCE tb_convenio_seq;
-CREATE TABLE tb_convenio (
-    id_convenio SERIAL NOT NULL DEFAULT nextval('tb_convenio_seq'),
-    nome_convenio VARCHAR NOT NULL,
-    CONSTRAINT tb_convenio_pk PRIMARY KEY (id_convenio)
-);
-
-----------------------------------------
--- Tabela Agenda
+-- TABELA AGENDA
 ----------------------------------------
 
 DROP TABLE if EXISTS tb_agenda CASCADE;
@@ -350,7 +337,7 @@ CREATE TABLE tb_usuario (
     senha_usuario VARCHAR(200) NOT NULL,
     CONSTRAINT tb_usuario_pk PRIMARY KEY (id_usuario)
 );
-----------------------------------------
+
 
     
     
@@ -369,3 +356,4 @@ CREATE TABLE tb_usuario (
 
 
   
+
