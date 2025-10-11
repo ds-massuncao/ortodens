@@ -130,4 +130,26 @@ CREATE TABLE tb_pagamento (
     CONSTRAINT id_convenio_fk FOREIGN KEY (id_convenio) REFERENCES tb_convenio (id_convenio)
 );
 
+----------------------------------------
+-- TABELA FORNECEDORES
+----------------------------------------
+DROP TABLE if EXISTS tb_fornecedor CASCADE;
+
+DROP SEQUENCE tb_fornecedor_seq;
+CREATE SEQUENCE tb_fornecedor_seq;
+
+CREATE TABLE tb_fornecedor (
+    id_fornecedor SERIAL NOT NULL,
+    nome_fornecedor VARCHAR(200) NOT NULL,
+    endereco_fornecedor VARCHAR(200) NOT NULL,
+    bairro_fornecedor VARCHAR(50) NOT NULL,
+    cidade_fornecedor VARCHAR(50) NOT NULL,
+    uf_fornecedor VARCHAR(2) NOT NULL,
+    cep_fornecedor VARCHAR(9) NOT NULL,
+    telefone_fornecedor VARCHAR(11) NOT NULL,
+    email_fornecedor VARCHAR(200) NOT NULL,
+    cnpj_fornecedor VARCHAR(14) NOT NULL,
+    CONSTRAINT tb_fornecedor_pk PRIMARY KEY (id_fornecedor)
+);
+
 
