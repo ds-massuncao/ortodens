@@ -44,3 +44,17 @@ CREATE TABLE tb_status_paciente (
     nome_status VARCHAR(50) NOT NULL,
     CONSTRAINT tb_status_paciente_pk PRIMARY KEY (id_status_paciente)
 );
+
+
+----------------------------------------
+-- TABELA CONVENIOS
+----------------------------------------
+
+DROP TABLE if EXISTS tb_convenio CASCADE;
+DROP SEQUENCE tb_convenio_seq;
+CREATE SEQUENCE tb_convenio_seq;
+CREATE TABLE tb_convenio (
+    id_convenio SERIAL NOT NULL,
+    nome_convenio VARCHAR NOT NULL,
+    CONSTRAINT tb_convenio_pk PRIMARY KEY (id_convenio)
+);
