@@ -339,3 +339,17 @@ CREATE TABLE tb_fluxo_caixa (
     CONSTRAINT id_servico_externo_fk FOREIGN KEY (id_servico_externo) REFERENCES tb_servico_externo (id_servico_externo),
     CONSTRAINT id_consulta_fk FOREIGN KEY (id_consulta) REFERENCES tb_consulta (id_consulta)
 );
+
+----------------------------------------
+-- TABELA USUARIOS
+----------------------------------------
+DROP TABLE iF EXISTS tb_usuario CASCADE;
+DROP SEQUENCE tb_usuario_seq;
+CREATE SEQUENCE tb_usuario_seq;
+CREATE TABLE tb_usuario (
+    id_usuario SERIAL NOT NULL,
+    nome_usuario VARCHAR(200) NOT NULL,
+    email_usuario VARCHAR(200) NOT NULL,
+    senha_usuario VARCHAR(200) NOT NULL,
+    CONSTRAINT tb_usuario_pk PRIMARY KEY (id_usuario)
+);
