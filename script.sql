@@ -58,3 +58,35 @@ CREATE TABLE tb_convenio (
     nome_convenio VARCHAR NOT NULL,
     CONSTRAINT tb_convenio_pk PRIMARY KEY (id_convenio)
 );
+
+----------------------------------------
+-- TABELA PACIENTES
+----------------------------------------
+DROP TABLE if EXISTS tb_paciente CASCADE;
+DROP SEQUENCE tb_paciente_seq;
+CREATE SEQUENCE tb_paciente_seq;
+CREATE TABLE tb_paciente (
+    id_paciente VARCHAR(20) NOT NULL DEFAULT
+        'SMO-' || TO_CHAR(nextval('tb_paciente_seq'::regclass), 'FM00000'),
+    nome_paciente VARCHAR(200) NOT NULL,
+    data_nascimento_paciente DATE NOT NULL,
+    cpf_paciente VARCHAR(11) NOT NULL,
+    rg_paciente VARCHAR(15) NOT NULL,
+    responsavel_paciente VARCHAR(200) NOT NULL,
+    cpf_resp_paciente VARCHAR(11) NOT NULL,
+    endereco_paciente VARCHAR(200) NOT NULL,
+    bairro_paciente VARCHAR(100) NOT NULL,
+    cidade_paciente VARCHAR(50) NOT NULL,
+    estado_paciente VARCHAR(2) NOT NULL,
+    cep_paciente VARCHAR(90) NOT NULL,
+    telefone_principal_paciente VARCHAR(11) NOT NULL,
+    whatsapp_paciente VARCHAR(11) NOT NULL,
+    data_inicio_tratamento DATE NOT NULL,
+    id_status_paciente SMALLINT NOT NULL,
+    id_convenio SMALLINT NOT NULL,
+    id_unidade VARCHAR(15) NOT NULL,
+    CONSTRAINT tb_paciente_pk PRIMARY KEY (id_paciente), 
+    CONSTRAINT id_status_paciente_fk FOREIGN KEY (id_status_paciente) REFERENCES tb_status_paciente (id_status_paciente),
+    CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade),
+    CONSTRAINT id_convenio_fk FOREIGN KEY (id_convenio) REFERENCES tb_convenio (id_convenio)
+);
