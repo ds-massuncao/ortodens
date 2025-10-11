@@ -21,7 +21,7 @@ CREATE TABLE tb_unidade (
 );
 
 ----------------------------------------
--- TABEAL DENTISTAS
+-- TABELA DENTISTAS
 ----------------------------------------
 DROP TABLE if EXISTS tb_dentista CASCADE;
 DROP SEQUENCE tb_dentista_seq;
@@ -30,4 +30,17 @@ CREATE TABLE tb_dentista (
     cro_dentista VARCHAR(11) NOT NULL,
     nome_dentista VARCHAR(200) NOT NULL,
     CONSTRAINT tb_dentista_pk PRIMARY KEY (cro_dentista)
+);
+
+
+----------------------------------------
+-- TABELA STATUS DO PACIENTE
+----------------------------------------
+DROP TABLE if EXISTS tb_status_paciente CASCADE;
+DROP SEQUENCE tb_status_paciente_seq;
+CREATE SEQUENCE tb_status_paciente_seq;
+CREATE TABLE tb_status_paciente (
+    id_status_paciente SERIAL NOT NULL,
+    nome_status VARCHAR(50) NOT NULL,
+    CONSTRAINT tb_status_paciente_pk PRIMARY KEY (id_status_paciente)
 );
