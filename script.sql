@@ -153,3 +153,20 @@ CREATE TABLE tb_fornecedor (
 );
 
 
+----------------------------------------
+-- TABELA PRODUTOS
+----------------------------------------
+
+DROP TABLE if EXISTS tb_produtos CASCADE;
+DROP SEQUENCE tb_produtos_seq;
+CREATE SEQUENCE tb_produtos_seq;
+
+CREATE TABLE tb_produtos (
+    id_produto SERIAL NOT NULL,
+    nome_produto VARCHAR(200) NOT NULL,
+    descricao_produto VARCHAR(500) NOT NULL,
+    preco_produto DECIMAL(10,2) NOT NULL,
+    CONSTRAINT tb_produtos_pk PRIMARY KEY (id_produto)
+);
+
+
