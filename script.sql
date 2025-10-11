@@ -19,3 +19,15 @@ CREATE TABLE tb_unidade (
     email_unidade VARCHAR(200) NOT NULL,
     CONSTRAINT tb_unidade_pk PRIMARY KEY (id_unidade)
 );
+
+----------------------------------------
+-- TABEAL DENTISTAS
+----------------------------------------
+DROP TABLE if EXISTS tb_dentista CASCADE;
+DROP SEQUENCE tb_dentista_seq;
+CREATE SEQUENCE tb_dentista_seq;
+CREATE TABLE tb_dentista (
+    cro_dentista VARCHAR(11) NOT NULL,
+    nome_dentista VARCHAR(200) NOT NULL,
+    CONSTRAINT tb_dentista_pk PRIMARY KEY (cro_dentista)
+);
