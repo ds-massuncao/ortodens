@@ -188,3 +188,23 @@ CREATE TABLE tb_compras (
     CONSTRAINT id_produto_fk FOREIGN KEY (id_produto) REFERENCES tb_produtos (id_produto)
 );
 
+----------------------------------------
+-- TABELA LABORATORIO
+----------------------------------------
+
+DROP TABLE if EXISTS tb_laboratorio CASCADE;
+DROP SEQUENCE tb_laboratorio_seq;
+CREATE SEQUENCE tb_laboratorio_seq;
+CREATE TABLE tb_laboratorio (
+    id_laboratorio SERIAL NOT NULL,
+    nome_laboratorio VARCHAR(200) NOT NULL,
+    endereco_laboratorio VARCHAR(200) NOT NULL,
+    bairro_laboratorio VARCHAR(50) NOT NULL,
+    cidade_laboratorio VARCHAR(50) NOT NULL,
+    uf_laboratorio VARCHAR(2) NOT NULL,
+    cep_laboratorio VARCHAR(9) NOT NULL,
+    telefone_laboratorio VARCHAR(11) NOT NULL,
+    email_laboratorio VARCHAR(200) NOT NULL,
+    cnpj_laboratorio VARCHAR(14) NOT NULL,
+    CONSTRAINT tb_laboratorio_pk PRIMARY KEY (id_laboratorio)
+);
