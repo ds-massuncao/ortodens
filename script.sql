@@ -288,3 +288,29 @@ CREATE TABLE tb_consulta (
     CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente) REFERENCES tb_paciente (id_paciente),
     CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade)
 );
+
+
+----------------------------------------
+-- TABELA EXAME
+----------------------------------------
+DROP TABLE if EXISTS tb_exame CASCADE;
+DROP SEQUENCE tb_exame_seq;
+CREATE SEQUENCE tb_exame_seq;
+CREATE TABLE tb_exame (
+    id_exame SERIAL NOT NULL,
+    id_consulta SMALLINT NOT NULL,
+    cro_dentista VARCHAR(11) NOT NULL,
+    id_paciente VARCHAR(20) NOT NULL,
+    id_unidade VARCHAR(15) NOT NULL,    
+    id_servico_externo SMALLINT NOT NULL,
+    tipo_exame VARCHAR(200) NOT NULL,
+    data_exame DATE NOT NULL,
+    hora_exame TIME NOT NULL,
+    descricao_exame VARCHAR(500) NOT NULL,
+    CONSTRAINT tb_exame_pk PRIMARY KEY (id_exame),
+    CONSTRAINT id_consulta_fk FOREIGN KEY (id_consulta) REFERENCES tb_consulta (id_consulta),
+    CONSTRAINT cro_dentista_fk FOREIGN KEY (cro_dentista) REFERENCES tb_dentista (cro_dentista),
+    CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente) REFERENCES tb_paciente (id_paciente),
+    CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade),
+    CONSTRAINT id_servico_externo_fk FOREIGN KEY (id_servico_externo) REFERENCES tb_servico_externo (id_servico_externo)
+);
