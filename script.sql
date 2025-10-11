@@ -169,4 +169,22 @@ CREATE TABLE tb_produtos (
     CONSTRAINT tb_produtos_pk PRIMARY KEY (id_produto)
 );
 
+----------------------------------------
+-- TABELA COMPRAS
+----------------------------------------
+
+DROP TABLE if EXISTS tb_compras CASCADE;
+DROP SEQUENCE tb_compras_seq;
+CREATE SEQUENCE tb_compras_seq;
+CREATE TABLE tb_compras (
+    id_compra SERIAL NOT NULL,
+    id_fornecedor SMALLINT NOT NULL,
+    id_produto SMALLINT NOT NULL,
+    quantidade_compra SMALLINT NOT NULL,
+    data_compra DATE NOT NULL,
+    valor_compra DECIMAL(10,2) NOT NULL,
+    CONSTRAINT tb_compras_pk PRIMARY KEY (id_compra),
+    CONSTRAINT id_fornecedor_fk FOREIGN KEY (id_fornecedor) REFERENCES tb_fornecedor (id_fornecedor),
+    CONSTRAINT id_produto_fk FOREIGN KEY (id_produto) REFERENCES tb_produtos (id_produto)
+);
 
