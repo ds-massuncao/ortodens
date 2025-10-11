@@ -208,3 +208,18 @@ CREATE TABLE tb_laboratorio (
     cnpj_laboratorio VARCHAR(14) NOT NULL,
     CONSTRAINT tb_laboratorio_pk PRIMARY KEY (id_laboratorio)
 );
+
+----------------------------------------
+-- TABELA PROCEDIMENTOS
+----------------------------------------
+
+DROP TABLE if EXISTS tb_procedimento CASCADE;
+DROP SEQUENCE tb_procedimento_seq;
+CREATE SEQUENCE tb_procedimento_seq;
+CREATE TABLE tb_procedimento (
+    id_procedimento SERIAL NOT NULL,
+    nome_procedimento VARCHAR(200) NOT NULL,
+    descricao_procedimento VARCHAR(500) NOT NULL,
+    preco_procedimento DECIMAL(10,2) NOT NULL,
+    CONSTRAINT tb_procedimento_pk PRIMARY KEY (id_procedimento)
+);
