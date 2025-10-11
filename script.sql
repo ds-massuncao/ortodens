@@ -112,3 +112,22 @@ CREATE TABLE tb_agenda (
     CONSTRAINT tb_agenda_pk PRIMARY KEY (id_agenda)
 );
 
+----------------------------------------
+-- TABELA PAGAMENTOS
+----------------------------------------
+
+DROP TABLE if EXISTS tb_pagamento CASCADE;
+
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+CREATE TABLE tb_pagamento (
+    id_pagamento UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id_paciente VARCHAR(20) NOT NULL,
+    id_convenio SMALLINT NOT NULL,
+    data_pagamento DATE NOT NULL,
+    valor_pagamento DECIMAL(10,2) NOT NULL,
+    CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente) REFERENCES tb_paciente (id_paciente),
+    CONSTRAINT id_convenio_fk FOREIGN KEY (id_convenio) REFERENCES tb_convenio (id_convenio)
+);
+
+
