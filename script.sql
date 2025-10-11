@@ -314,3 +314,28 @@ CREATE TABLE tb_exame (
     CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade),
     CONSTRAINT id_servico_externo_fk FOREIGN KEY (id_servico_externo) REFERENCES tb_servico_externo (id_servico_externo)
 );
+
+
+----------------------------------------
+-- TABELA FLUXO DE CAIXA
+----------------------------------------
+
+DROP TABLE if EXISTS tb_fluxo_caixa CASCADE;
+
+DROP SEQUENCE tb_fluxo_caixa_seq;
+CREATE SEQUENCE tb_fluxo_caixa_seq;
+CREATE TABLE tb_fluxo_caixa (
+    id_fluxo_caixa SERIAL PRIMARY KEY,
+    id_compra SMALLINT NOT NULL,
+    id_pagamento UUID NOT NULL,
+    id_exame SMALLINT NOT NULL,
+    id_servico_externo SMALLINT NOT NULL,
+    id_consulta SMALLINT NOT NULL,
+    data_fluxo_caixa DATE NOT NULL,
+    valor_fluxo_caixa DECIMAL(10,2) NOT NULL,
+    CONSTRAINT id_compra_fk FOREIGN KEY (id_compra) REFERENCES tb_compras (id_compra),
+    CONSTRAINT id_pagamento_fk FOREIGN KEY (id_pagamento) REFERENCES tb_pagamento (id_pagamento),
+    CONSTRAINT id_exame_fk FOREIGN KEY (id_exame) REFERENCES tb_exame (id_exame),
+    CONSTRAINT id_servico_externo_fk FOREIGN KEY (id_servico_externo) REFERENCES tb_servico_externo (id_servico_externo),
+    CONSTRAINT id_consulta_fk FOREIGN KEY (id_consulta) REFERENCES tb_consulta (id_consulta)
+);
