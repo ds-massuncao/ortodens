@@ -242,3 +242,25 @@ CREATE TABLE tb_instrumental (
     CONSTRAINT id_produto_fk FOREIGN KEY (id_produto) REFERENCES tb_produtos (id_produto),
     CONSTRAINT id_procedimento_fk FOREIGN KEY (id_procedimento) REFERENCES tb_procedimento (id_procedimento)
 );
+
+
+----------------------------------------
+-- TABELA SERVICOS EXTERNOS
+----------------------------------------
+
+DROP TABLE if EXISTS tb_servico_externo CASCADE;
+
+DROP SEQUENCE tb_servico_externo_seq;
+CREATE SEQUENCE tb_servico_externo_seq; 
+CREATE TABLE tb_servico_externo (
+    id_servico_externo SERIAL NOT NULL,
+    id_laboratorio SMALLINT NOT NULL,
+    id_procedimento SMALLINT NOT NULL,
+    nome_servico_externo VARCHAR(200) NOT NULL,
+    descricao_servico_externo VARCHAR(500) NOT NULL,
+    preco_servico_externo DECIMAL(10,2) NOT NULL,
+    quantidade_servico_externo SMALLINT NOT NULL,
+    CONSTRAINT tb_servico_externo_pk PRIMARY KEY (id_servico_externo),
+    CONSTRAINT id_laboratorio_fk FOREIGN KEY (id_laboratorio) REFERENCES tb_laboratorio (id_laboratorio),
+    CONSTRAINT id_procedimento_fk FOREIGN KEY (id_procedimento) REFERENCES tb_procedimento (id_procedimento)
+);
