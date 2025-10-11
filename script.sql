@@ -90,3 +90,25 @@ CREATE TABLE tb_paciente (
     CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade),
     CONSTRAINT id_convenio_fk FOREIGN KEY (id_convenio) REFERENCES tb_convenio (id_convenio)
 );
+
+----------------------------------------
+-- TABELA AGENDA
+----------------------------------------
+
+DROP TABLE if EXISTS tb_agenda CASCADE;
+DROP SEQUENCE tb_agenda_seq;
+CREATE SEQUENCE tb_agenda_seq;
+
+CREATE TABLE tb_agenda (
+    id_agenda SERIAL NOT NULL,
+    id_paciente VARCHAR(20) NOT NULL,
+    cro_dentista VARCHAR(11) NOT NULL,
+    id_unidade VARCHAR(15) NOT NULL,
+    data_agenda DATE NOT NULL,
+    hora_agenda TIME NOT NULL,
+    CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente) REFERENCES tb_paciente (id_paciente),
+    CONSTRAINT cro_dentista_fk FOREIGN KEY (cro_dentista) REFERENCES tb_dentista (cro_dentista),
+    CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade),
+    CONSTRAINT tb_agenda_pk PRIMARY KEY (id_agenda)
+);
+
