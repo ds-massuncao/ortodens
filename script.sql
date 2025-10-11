@@ -223,3 +223,22 @@ CREATE TABLE tb_procedimento (
     preco_procedimento DECIMAL(10,2) NOT NULL,
     CONSTRAINT tb_procedimento_pk PRIMARY KEY (id_procedimento)
 );
+
+
+----------------------------------------
+-- TABELA INSTRUMENTAL
+----------------------------------------
+
+DROP TABLE if EXISTS tb_instrumental CASCADE;
+
+DROP SEQUENCE tb_instrumental_seq;  
+CREATE SEQUENCE tb_instrumental_seq;
+CREATE TABLE tb_instrumental (
+    id_instrumental SERIAL NOT NULL,
+    id_produto SMALLINT NOT NULL,
+    id_procedimento SMALLINT NOT NULL,
+    quantidade_produto SMALLINT NOT NULL,
+    CONSTRAINT tb_instrumental_pk PRIMARY KEY (id_instrumental),
+    CONSTRAINT id_produto_fk FOREIGN KEY (id_produto) REFERENCES tb_produtos (id_produto),
+    CONSTRAINT id_procedimento_fk FOREIGN KEY (id_procedimento) REFERENCES tb_procedimento (id_procedimento)
+);
