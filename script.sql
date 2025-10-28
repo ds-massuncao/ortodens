@@ -1,14 +1,15 @@
+-- configurando data para o padrão brasileiro
 SET DATESTYLE TO POSTGRES, DMY ;
 
-----------------------------------------
--- TABELA UNIDADE
-----------------------------------------
+-- ============================================
+-- TABELA UNIDADE 
+-- ============================================
 DROP TABLE if EXISTS tb_unidade CASCADE;
 DROP SEQUENCE tb_unidade_seq;
 CREATE SEQUENCE tb_unidade_seq;
 CREATE TABLE tb_unidade (
     id_unidade VARCHAR(15) NOT NULL DEFAULT 
-        'SORRISO - ' || TO_CHAR(nextval('tb_unidade_seq'::regclass), 'FM0000'),
+        'SORRISO-' || TO_CHAR(nextval('tb_unidade_seq'::regclass), 'FM0000'),
     nome_unidade VARCHAR NOT NULL,
     endereco_unidade VARCHAR(200) NOT NULL,
     bairro_unidade VARCHAR(50) NOT NULL,
@@ -20,52 +21,55 @@ CREATE TABLE tb_unidade (
     CONSTRAINT tb_unidade_pk PRIMARY KEY (id_unidade)
 );
 
-----------------------------------------
--- TABEAL DENTISTAS
-----------------------------------------
+
+-- ============================================
+-- TABELA DENTISTA
+-- ============================================
 DROP TABLE if EXISTS tb_dentista CASCADE;
-DROP SEQUENCE tb_dentista_seq;
-CREATE SEQUENCE tb_dentista_seq;
 CREATE TABLE tb_dentista (
     cro_dentista VARCHAR(11) NOT NULL,
     nome_dentista VARCHAR(200) NOT NULL,
     id_unidade VARCHAR(15) NOT NULL,
     telefone_dentista VARCHAR(11) NOT NULL,
     email_dentista VARCHAR(200) NOT NULL,
-    CONSTRAINT tb_dentista_pk PRIMARY KEY (cro_dentista),
+    CONSTRAINT tb_dentista_pk PRIMARY KEY (cro_dentista)
     CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade) 
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
 );
 
-
-----------------------------------------
+-- ============================================
 -- TABELA STATUS DO PACIENTE
-----------------------------------------
+-- ============================================
 DROP TABLE if EXISTS tb_status_paciente CASCADE;
-DROP SEQUENCE tb_status_paciente_seq;
-CREATE SEQUENCE tb_status_paciente_seq;
 CREATE TABLE tb_status_paciente (
     id_status_paciente SERIAL NOT NULL,
     nome_status VARCHAR(50) NOT NULL,
     CONSTRAINT tb_status_paciente_pk PRIMARY KEY (id_status_paciente)
 );
 
-
-----------------------------------------
+-- ============================================
 -- TABELA CONVENIOS
-----------------------------------------
+-- ============================================
 
 DROP TABLE if EXISTS tb_convenio CASCADE;
-DROP SEQUENCE tb_convenio_seq;
-CREATE SEQUENCE tb_convenio_seq;
 CREATE TABLE tb_convenio (
     id_convenio SERIAL NOT NULL,
     nome_convenio VARCHAR NOT NULL,
+    telefone_convenio VARCHAR(11) NOT NULL,
+    email_convenio VARCHAR(200) NOT NULL,
+    cnpj_convenio VARCHAR(14) NOT NULL,
+    endereco_convenio VARCHAR(200) NOT NULL,
+    bairro_convenio VARCHAR(50) NOT NULL,
+    cidade_convenio VARCHAR(50) NOT NULL,
+    uf_convenio VARCHAR(2) NOT NULL,
+    cep_convenio VARCHAR(9) NOT NULL,
     CONSTRAINT tb_convenio_pk PRIMARY KEY (id_convenio)
 );
 
-----------------------------------------
+-- ============================================
 -- TABELA PACIENTES
-----------------------------------------
+-- ============================================
 DROP TABLE if EXISTS tb_paciente CASCADE;
 DROP SEQUENCE tb_paciente_seq;
 CREATE SEQUENCE tb_paciente_seq;
@@ -74,25 +78,31 @@ CREATE TABLE tb_paciente (
         'SMO-' || TO_CHAR(nextval('tb_paciente_seq'::regclass), 'FM00000'),
     nome_paciente VARCHAR(200) NOT NULL,
     data_nascimento_paciente DATE NOT NULL,
-    cpf_paciente VARCHAR(11) NOT NULL,
-    rg_paciente VARCHAR(15) NOT NULL,
+    cpf_paciente VARCHAR(20) NOT NULL,
+    rg_paciente VARCHAR(20) NOT NULL,
     responsavel_paciente VARCHAR(200) NOT NULL,
-    cpf_resp_paciente VARCHAR(11) NOT NULL,
+    cpf_resp_paciente VARCHAR(20) NOT NULL,
     endereco_paciente VARCHAR(200) NOT NULL,
     bairro_paciente VARCHAR(100) NOT NULL,
     cidade_paciente VARCHAR(50) NOT NULL,
     estado_paciente VARCHAR(2) NOT NULL,
     cep_paciente VARCHAR(90) NOT NULL,
-    telefone_principal_paciente VARCHAR(11) NOT NULL,
-    whatsapp_paciente VARCHAR(11) NOT NULL,
+    telefone_principal_paciente VARCHAR(20) NOT NULL,
+    whatsapp_paciente VARCHAR(20) NOT NULL,
     data_inicio_tratamento DATE NOT NULL,
     id_status_paciente SMALLINT NOT NULL,
     id_convenio SMALLINT NOT NULL,
     id_unidade VARCHAR(15) NOT NULL,
     CONSTRAINT tb_paciente_pk PRIMARY KEY (id_paciente), 
-    CONSTRAINT id_status_paciente_fk FOREIGN KEY (id_status_paciente) REFERENCES tb_status_paciente (id_status_paciente),
-    CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade),
+    CONSTRAINT id_status_paciente_fk FOREIGN KEY (id_status_paciente) REFERENCES tb_status_paciente (id_status_paciente)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+    CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
     CONSTRAINT id_convenio_fk FOREIGN KEY (id_convenio) REFERENCES tb_convenio (id_convenio)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
 );
 
 ----------------------------------------
@@ -100,9 +110,6 @@ CREATE TABLE tb_paciente (
 ----------------------------------------
 
 DROP TABLE if EXISTS tb_agenda CASCADE;
-DROP SEQUENCE tb_agenda_seq;
-CREATE SEQUENCE tb_agenda_seq;
-
 CREATE TABLE tb_agenda (
     id_agenda SERIAL NOT NULL,
     id_paciente VARCHAR(20) NOT NULL,
@@ -110,38 +117,41 @@ CREATE TABLE tb_agenda (
     id_unidade VARCHAR(15) NOT NULL,
     data_agenda DATE NOT NULL,
     hora_agenda TIME NOT NULL,
-    CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente) REFERENCES tb_paciente (id_paciente),
-    CONSTRAINT cro_dentista_fk FOREIGN KEY (cro_dentista) REFERENCES tb_dentista (cro_dentista),
-    CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade),
-    CONSTRAINT tb_agenda_pk PRIMARY KEY (id_agenda)
+    CONSTRAINT tb_agenda_pk PRIMARY KEY (id_agenda),
+    CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente) REFERENCES tb_paciente (id_paciente)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+    CONSTRAINT cro_dentista_fk FOREIGN KEY (cro_dentista) REFERENCES tb_dentista (cro_dentista)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+    CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+   
 );
 
-----------------------------------------
--- TABELA PAGAMENTOS
-----------------------------------------
+-- ============================================
+-- TABELA PAGAMENTO
+-- ============================================
 
 DROP TABLE if EXISTS tb_pagamento CASCADE;
-
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-
 CREATE TABLE tb_pagamento (
     id_pagamento UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_paciente VARCHAR(20) NOT NULL,
-    id_convenio SMALLINT NOT NULL,
+    id_procedimento INTEGER NOT NULL,
     data_pagamento DATE NOT NULL,
     valor_pagamento DECIMAL(10,2) NOT NULL,
     CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente) REFERENCES tb_paciente (id_paciente),
-    CONSTRAINT id_convenio_fk FOREIGN KEY (id_convenio) REFERENCES tb_convenio (id_convenio)
+    CONSTRAINT id_procedimento_fk FOREIGN KEY  (id_procedimento) REFERENCES tb_procedimento (id_procedimento)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE 
 );
 
-----------------------------------------
+-- ============================================
 -- TABELA FORNECEDORES
-----------------------------------------
+-- ============================================
 DROP TABLE if EXISTS tb_fornecedor CASCADE;
-
-DROP SEQUENCE tb_fornecedor_seq;
-CREATE SEQUENCE tb_fornecedor_seq;
-
 CREATE TABLE tb_fornecedor (
     id_fornecedor SERIAL NOT NULL,
     nome_fornecedor VARCHAR(200) NOT NULL,
@@ -156,15 +166,11 @@ CREATE TABLE tb_fornecedor (
     CONSTRAINT tb_fornecedor_pk PRIMARY KEY (id_fornecedor)
 );
 
-
-----------------------------------------
+-- ============================================
 -- TABELA PRODUTOS
-----------------------------------------
+-- ============================================
 
 DROP TABLE if EXISTS tb_produtos CASCADE;
-DROP SEQUENCE tb_produtos_seq;
-CREATE SEQUENCE tb_produtos_seq;
-
 CREATE TABLE tb_produtos (
     id_produto SERIAL NOT NULL,
     nome_produto VARCHAR(200) NOT NULL,
@@ -173,13 +179,12 @@ CREATE TABLE tb_produtos (
     CONSTRAINT tb_produtos_pk PRIMARY KEY (id_produto)
 );
 
-----------------------------------------
+
+-- ============================================
 -- TABELA COMPRAS
-----------------------------------------
+-- ============================================
 
 DROP TABLE if EXISTS tb_compras CASCADE;
-DROP SEQUENCE tb_compras_seq;
-CREATE SEQUENCE tb_compras_seq;
 CREATE TABLE tb_compras (
     id_compra SERIAL NOT NULL,
     id_fornecedor SMALLINT NOT NULL,
@@ -188,17 +193,20 @@ CREATE TABLE tb_compras (
     data_compra DATE NOT NULL,
     valor_compra DECIMAL(10,2) NOT NULL,
     CONSTRAINT tb_compras_pk PRIMARY KEY (id_compra),
-    CONSTRAINT id_fornecedor_fk FOREIGN KEY (id_fornecedor) REFERENCES tb_fornecedor (id_fornecedor),
+    CONSTRAINT id_fornecedor_fk FOREIGN KEY (id_fornecedor) REFERENCES tb_fornecedor (id_fornecedor)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
     CONSTRAINT id_produto_fk FOREIGN KEY (id_produto) REFERENCES tb_produtos (id_produto)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
 );
 
-----------------------------------------
+
+-- ============================================
 -- TABELA LABORATORIO
-----------------------------------------
+-- ============================================
 
 DROP TABLE if EXISTS tb_laboratorio CASCADE;
-DROP SEQUENCE tb_laboratorio_seq;
-CREATE SEQUENCE tb_laboratorio_seq;
 CREATE TABLE tb_laboratorio (
     id_laboratorio SERIAL NOT NULL,
     nome_laboratorio VARCHAR(200) NOT NULL,
@@ -213,13 +221,11 @@ CREATE TABLE tb_laboratorio (
     CONSTRAINT tb_laboratorio_pk PRIMARY KEY (id_laboratorio)
 );
 
-----------------------------------------
+-- ============================================
 -- TABELA PROCEDIMENTOS
-----------------------------------------
+-- ============================================
 
 DROP TABLE if EXISTS tb_procedimento CASCADE;
-DROP SEQUENCE tb_procedimento_seq;
-CREATE SEQUENCE tb_procedimento_seq;
 CREATE TABLE tb_procedimento (
     id_procedimento SERIAL NOT NULL,
     nome_procedimento VARCHAR(200) NOT NULL,
@@ -228,34 +234,30 @@ CREATE TABLE tb_procedimento (
     CONSTRAINT tb_procedimento_pk PRIMARY KEY (id_procedimento)
 );
 
-
-----------------------------------------
--- TABELA INSTRUMENTAL
-----------------------------------------
+-- ============================================
+-- TABELA iNTRUMENTAL
+-- ============================================
 
 DROP TABLE if EXISTS tb_instrumental CASCADE;
-
-DROP SEQUENCE tb_instrumental_seq;  
-CREATE SEQUENCE tb_instrumental_seq;
 CREATE TABLE tb_instrumental (
     id_instrumental SERIAL NOT NULL,
     id_produto SMALLINT NOT NULL,
     id_procedimento SMALLINT NOT NULL,
     quantidade_produto SMALLINT NOT NULL,
     CONSTRAINT tb_instrumental_pk PRIMARY KEY (id_instrumental),
-    CONSTRAINT id_produto_fk FOREIGN KEY (id_produto) REFERENCES tb_produtos (id_produto),
+    CONSTRAINT id_produto_fk FOREIGN KEY (id_produto) REFERENCES tb_produtos (id_produto)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
     CONSTRAINT id_procedimento_fk FOREIGN KEY (id_procedimento) REFERENCES tb_procedimento (id_procedimento)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
 );
 
+-- ============================================
+-- TABELA SERVIÇOS EXTERNOS
+-- ============================================
 
-----------------------------------------
--- TABELA SERVICOS EXTERNOS
-----------------------------------------
-
-DROP TABLE if EXISTS tb_servico_externo CASCADE;
-
-DROP SEQUENCE tb_servico_externo_seq;
-CREATE SEQUENCE tb_servico_externo_seq; 
+DROP TABLE if EXISTS tb_servico_externo CASCADE; 
 CREATE TABLE tb_servico_externo (
     id_servico_externo SERIAL NOT NULL,
     id_laboratorio SMALLINT NOT NULL,
@@ -265,95 +267,100 @@ CREATE TABLE tb_servico_externo (
     preco_servico_externo DECIMAL(10,2) NOT NULL,
     quantidade_servico_externo SMALLINT NOT NULL,
     CONSTRAINT tb_servico_externo_pk PRIMARY KEY (id_servico_externo),
-    CONSTRAINT id_laboratorio_fk FOREIGN KEY (id_laboratorio) REFERENCES tb_laboratorio (id_laboratorio),
+    CONSTRAINT id_laboratorio_fk FOREIGN KEY (id_laboratorio) REFERENCES tb_laboratorio (id_laboratorio)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
     CONSTRAINT id_procedimento_fk FOREIGN KEY (id_procedimento) REFERENCES tb_procedimento (id_procedimento)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
 );
 
-----------------------------------------
--- TABELA CONSULTAS
-----------------------------------------
+-- ============================================
+-- TABELA CONSULTA
+-- ============================================
 
 DROP TABLE if EXISTS tb_consulta CASCADE;
-DROP SEQUENCE tb_consulta_seq;
-CREATE SEQUENCE tb_consulta_seq;
-
 CREATE TABLE tb_consulta (
     id_consulta SERIAL NOT NULL,
     cro_dentista VARCHAR(11) NOT NULL,
     id_paciente VARCHAR(20) NOT NULL,
-    id_unidade VARCHAR(15) NOT NULL,
     id_procedimento SMALLINT NOT NULL,
     data_consulta DATE NOT NULL,
     hora_consulta TIME NOT NULL,
     descricao_consulta VARCHAR(500) NOT NULL,
     CONSTRAINT tb_consulta_pk PRIMARY KEY (id_consulta),
-    CONSTRAINT cro_dentista_fk FOREIGN KEY (cro_dentista) REFERENCES tb_dentista (cro_dentista),
-    CONSTRAINT id_procedimento_fk FOREIGN KEY (id_procedimento) REFERENCES tb_procedimento (id_procedimento),
-    CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente) REFERENCES tb_paciente (id_paciente),
-    CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade)
+    CONSTRAINT cro_dentista_fk FOREIGN KEY (cro_dentista) REFERENCES tb_dentista (cro_dentista)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+    CONSTRAINT id_procedimento_fk FOREIGN KEY (id_procedimento) REFERENCES tb_procedimento (id_procedimento)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+    CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente) REFERENCES tb_paciente (id_paciente)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
 );
 
 
-----------------------------------------
--- TABELA EXAME
-----------------------------------------
-DROP TABLE if EXISTS tb_exame CASCADE;
-DROP SEQUENCE tb_exame_seq;
-CREATE SEQUENCE tb_exame_seq;
-CREATE TABLE tb_exame (
-    id_exame SERIAL NOT NULL,
-    id_consulta SMALLINT NOT NULL,
+
+-- ============================================
+-- CATÁLOGO DE EXAMES
+-- ============================================
+
+-- Tabela de Categorias de Exames
+DROP TABLE if EXISTS tb_categoria_exame CASCADE;
+CREATE TABLE tb_categoria_exame (
+    id_categoria_exame SERIAL PRIMARY KEY,
+    nome_categoria VARCHAR(50) NOT NULL UNIQUE,
+    descricao_categoria TEXT
+);
+
+-- Tabela de Catálogo de Exames
+DROP TABLE if EXISTS tb_catalogo_exame CASCADE;
+CREATE TABLE tb_catalogo_exame (
+    id_cat_exame SERIAL PRIMARY KEY,
+    id_categoria_exame INTEGER NOT NULL,
+    tipo_exame VARCHAR(100) NOT NULL,
+    descricao TEXT NOT NULL,
+    finalidade TEXT NOT NULL,
+    CONSTRAINT fk_tb_categoria_exame FOREIGN KEY (id_categoria_exame) 
+        REFERENCES tb_categoria_exame(id_categoria_exame)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+-- Tabela de Solicitação de Exames
+DROP TABLE if EXISTS tb_solicitacao_exame CASCADE;
+CREATE TABLE  tb_solicitacao_exame (
+    id_solicitacao SERIAL PRIMARY KEY,
+    id_consulta INTEGER NOT NULL,
     cro_dentista VARCHAR(11) NOT NULL,
     id_paciente VARCHAR(20) NOT NULL,
-    id_unidade VARCHAR(15) NOT NULL,    
-    id_servico_externo SMALLINT NOT NULL,
-    tipo_exame VARCHAR(200) NOT NULL,
-    data_exame DATE NOT NULL,
-    hora_exame TIME NOT NULL,
-    descricao_exame VARCHAR(500) NOT NULL,
-    CONSTRAINT tb_exame_pk PRIMARY KEY (id_exame),
-    CONSTRAINT id_consulta_fk FOREIGN KEY (id_consulta) REFERENCES tb_consulta (id_consulta),
-    CONSTRAINT cro_dentista_fk FOREIGN KEY (cro_dentista) REFERENCES tb_dentista (cro_dentista),
-    CONSTRAINT id_paciente_fk FOREIGN KEY (id_paciente) REFERENCES tb_paciente (id_paciente),
-    CONSTRAINT id_unidade_fk FOREIGN KEY (id_unidade) REFERENCES tb_unidade (id_unidade),
-    CONSTRAINT id_servico_externo_fk FOREIGN KEY (id_servico_externo) REFERENCES tb_servico_externo (id_servico_externo)
+    id_cat_exame INTEGER NOT NULL,
+    data_solicitacao DATE NOT NULL DEFAULT CURRENT_DATE,
+    hora_solicitacao TIME NOT NULL DEFAULT CURRENT_TIME,
+    urgencia VARCHAR(20) DEFAULT 'NORMAL' CHECK (urgencia IN ('URGENTE', 'NORMAL', 'ROTINA')),
+    status_solicitacao VARCHAR(30) DEFAULT 'PENDENTE' 
+        CHECK (status_solicitacao IN ('PENDENTE', 'AGENDADO', 'REALIZADO', 'CANCELADO')),
+    id_exame_realizado INTEGER, -- FK para tb_exame quando realizado
+    observacoes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    CONSTRAINT fk_consulta_solicitacao 
+        FOREIGN KEY (id_consulta) 
+        REFERENCES tb_consulta(id_consulta)
+        ON DELETE RESTRICT,
+    CONSTRAINT fk_dentista_solicitacao 
+        FOREIGN KEY (cro_dentista) 
+        REFERENCES tb_dentista(cro_dentista)
+        ON DELETE RESTRICT,
+    CONSTRAINT fk_paciente_solicitacao 
+        FOREIGN KEY (id_paciente) 
+        REFERENCES tb_paciente(id_paciente)
+        ON DELETE RESTRICT,
+    CONSTRAINT fk_cat_exame_solicitacao 
+        FOREIGN KEY (id_cat_exame) 
+        REFERENCES tb_catalogo_exame (id_cat_exame)       
+        ON DELETE RESTRICT
 );
 
-
-----------------------------------------
--- TABELA FLUXO DE CAIXA
-----------------------------------------
-
-DROP TABLE if EXISTS tb_fluxo_caixa CASCADE;
-
-DROP SEQUENCE tb_fluxo_caixa_seq;
-CREATE SEQUENCE tb_fluxo_caixa_seq;
-CREATE TABLE tb_fluxo_caixa (
-    id_fluxo_caixa SERIAL PRIMARY KEY,
-    id_compra SMALLINT NOT NULL,
-    id_pagamento UUID NOT NULL,
-    id_exame SMALLINT NOT NULL,
-    id_servico_externo SMALLINT NOT NULL,
-    id_consulta SMALLINT NOT NULL,
-    data_fluxo_caixa DATE NOT NULL,
-    valor_fluxo_caixa DECIMAL(10,2) NOT NULL,
-    CONSTRAINT id_compra_fk FOREIGN KEY (id_compra) REFERENCES tb_compras (id_compra),
-    CONSTRAINT id_pagamento_fk FOREIGN KEY (id_pagamento) REFERENCES tb_pagamento (id_pagamento),
-    CONSTRAINT id_exame_fk FOREIGN KEY (id_exame) REFERENCES tb_exame (id_exame),
-    CONSTRAINT id_servico_externo_fk FOREIGN KEY (id_servico_externo) REFERENCES tb_servico_externo (id_servico_externo),
-    CONSTRAINT id_consulta_fk FOREIGN KEY (id_consulta) REFERENCES tb_consulta (id_consulta)
-);
-
-----------------------------------------
--- TABELA USUARIOS
-----------------------------------------
-DROP TABLE iF EXISTS tb_usuario CASCADE;
-DROP SEQUENCE tb_usuario_seq;
-CREATE SEQUENCE tb_usuario_seq;
-CREATE TABLE tb_usuario (
-    id_usuario SERIAL NOT NULL,
-    nome_usuario VARCHAR(200) NOT NULL,
-    email_usuario VARCHAR(200) NOT NULL,
-    senha_usuario VARCHAR(200) NOT NULL,
-    CONSTRAINT tb_usuario_pk PRIMARY KEY (id_usuario)
-);
