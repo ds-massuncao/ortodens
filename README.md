@@ -27,6 +27,7 @@ Este repositório apresenta o **Projeto Integrador III** do curso de **Big Data 
 - [Objetivo da Empresa](#-objetivo-da-empresa)  
 - [Missão, Visão e Valores](#-missão-visão-e-valores)  
 - [Aplicação de Business Intelligence](#-aplicação-de-business-intelligence)  
+- [Artefatos de Programação em Banco de Dados](#-Artefatos-de-Programação-em-Banco-de-Dados)
 - [Referência](#-referência)  
 - [Contato](#-contato)  
 
@@ -88,6 +89,49 @@ O projeto aplica técnicas avançadas de **BI**:
 - **Data Warehouse:** Centralização de informações estratégicas;  
 - **Mineração de dados e IA:** Identificação de padrões e geração de insights;  
 - **Geração de conhecimento:** Transformação de dados brutos em informações estratégicas.
+
+---
+
+## Artefatos de Programação em Banco de Dados  
+
+**1. Trigger: Cálculo Automático de Faixa Etária (APBD)**
+Esta seção documenta a função fn_atualiza_faixa_etaria() e o trigger tg_dim_paciente_faixa_etaria associado a ela.
+
+**Objetivo e Relevância**
+- **O que faz:** O trigger calcula e preenche automaticamente a coluna Faixa_Etaria (ex: "18-29 (Jovem Adulto)") na tabela DIM_PACIENTE.
+- **Quando dispara:** Ele é acionado antes (BEFORE) que qualquer novo paciente seja inserido (INSERT) ou que a Data_Nascimento de um paciente existente seja alterada (UPDATE).
+- **Benefício para o Projeto:** Garante a consistência e integridade dos dados demográficos. Ao automatizar esse cálculo no nível do banco de dados, eliminamos a chance de erro humano ou falha do ETL, garantindo que a faixa etária esteja sempre correta e preenchida. Isso é vital para a segmentação de pacientes e para o modelo de Machine Learning.
+
+**2. Stored Procedure: Estatística de Pacientes por Faixa Etária (APBD)**
+Esta seção documenta a stored procedure (função) sp_contar_pacientes_por_faixa_etaria(), que atende ao requisito de usar um cursor não vinculado e query dinâmica.
+
+**Objetivo e Relevância**
+- **Estatística Calculada:** A Contagem Total (COUNT) de pacientes para cada categoria de Faixa_Etaria.
+- **Como funciona (Requisito):** A função constrói uma query SQL dinamicamente como uma string. Em seguida, ela abre um REFCURSOR (cursor não vinculado) para executar essa string e percorre (faz um loop) os resultados, retornando-os em formato de tabela.
+- **Relevância para o Projeto:** Esta é uma estatística de negócio fundamental. Ela responde à pergunta: "Qual é o perfil demográfico principal da nossa clínica?". Com essa informação, a gestão pode tomar decisões estratégicas de marketing (focar em implantes para "Idosos" ou ortodontia para "Adolescentes") e entender melhor o público que está analisando no modelo de churn.
+- **Tabelas e Colunas Usadas:**
+    **- Tabela:** DIM_PACIENTE
+    **- Colunas:** Faixa_Etaria (para agrupar) e Flag_Versao_Atual (para filtrar).
+
+**3. Análise Preditiva: Previsão de Risco de Churn**
+Esta seção documenta o modelo de Machine Learning e o pipeline de dados construído para prever a probabilidade de abandono (churn) de pacientes ativos.
+
+**Objetivo e Relevância**
+**Objetivo:** Identificar proativamente quais pacientes ativos (que ainda não abandonaram a clínica) possuem alta probabilidade de se tornarem churn nos próximos meses.
+**Como funciona:** O modelo utiliza um algoritmo de Random Forest Classifier treinado com dados históricos do Data Warehouse. Ele analisa padrões comportamentais (frequência, pagamentos), demográficos, de sentimento (pesquisas de satisfação) e de contexto (tipo de procedimento) para calcular uma probabilidade de risco (0% a 100%).
+**Relevância para o Projeto:** Transforma a estratégia da clínica de reativa para proativa.
+    **Antes:** A clínica só percebia a perda do cliente após 180 dias de inatividade.
+    **Agora:** O sistema gera uma "Lista de Ação" com precisão de 73%, permitindo que a equipe de retenção entre em contato com pacientes em risco antes que eles deixem de     frequentar a clínica, protegendo a receita recorrente.
+
+**Arquitetura da Solução**
+O processo funciona em um ciclo automatizado:
+-**Extração:** O Data Warehouse gera um "retrato" atual dos pacientes ativos.
+-**Inferência:** Um script Python carrega o modelo treinado (.pkl) e calcula a probabilidade.
+-**Carga:** As probabilidades são salvas na coluna Probabilidade_Churn da tabela DIM_PACIENTE.
+
+**Performance do Modelo (Dados de Validação):**
+-Recall (Captura): 79% (Identifica 8 em cada 10 potenciais cancelamentos).
+-Precision (Assertividade): 73% (A cada 100 alertas gerados, 73 são reais riscos de churn).
 
 ---
 
