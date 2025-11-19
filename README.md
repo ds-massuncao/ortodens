@@ -27,7 +27,7 @@ Este repositório apresenta o **Projeto Integrador III** do curso de **Big Data 
 - [Objetivo da Empresa](#-objetivo-da-empresa)  
 - [Missão, Visão e Valores](#-missão-visão-e-valores)  
 - [Aplicação de Business Intelligence](#-aplicação-de-business-intelligence)  
-- [Artefatos de Programação em Banco de Dados](#-Artefatos-de-Programação-em-Banco-de-Dados)
+- [Artefatos de Programação em Banco de Dados](#-artefatos-de-Programação-em-Banco-de-Dados)
 - [Referência](#-referência)  
 - [Contato](#-contato)  
 
