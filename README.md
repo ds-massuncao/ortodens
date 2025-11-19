@@ -117,21 +117,21 @@ Esta seção documenta a stored procedure (função) sp_contar_pacientes_por_fai
 Esta seção documenta o modelo de Machine Learning e o pipeline de dados construído para prever a probabilidade de abandono (churn) de pacientes ativos.
 
 **Objetivo e Relevância**
-**Objetivo:** Identificar proativamente quais pacientes ativos (que ainda não abandonaram a clínica) possuem alta probabilidade de se tornarem churn nos próximos meses.
-**Como funciona:** O modelo utiliza um algoritmo de Random Forest Classifier treinado com dados históricos do Data Warehouse. Ele analisa padrões comportamentais (frequência, pagamentos), demográficos, de sentimento (pesquisas de satisfação) e de contexto (tipo de procedimento) para calcular uma probabilidade de risco (0% a 100%).
-**Relevância para o Projeto:** Transforma a estratégia da clínica de reativa para proativa.
-    **Antes:** A clínica só percebia a perda do cliente após 180 dias de inatividade.
-    **Agora:** O sistema gera uma "Lista de Ação" com precisão de 73%, permitindo que a equipe de retenção entre em contato com pacientes em risco antes que eles deixem de     frequentar a clínica, protegendo a receita recorrente.
+- **Objetivo:** Identificar proativamente quais pacientes ativos (que ainda não abandonaram a clínica) possuem alta probabilidade de se tornarem churn nos próximos meses.
+- **Como funciona:** O modelo utiliza um algoritmo de Random Forest Classifier treinado com dados históricos do Data Warehouse. Ele analisa padrões comportamentais (frequência, pagamentos), demográficos, de sentimento (pesquisas de satisfação) e de contexto (tipo de procedimento) para calcular uma probabilidade de risco (0% a 100%).
+- **Relevância para o Projeto:** Transforma a estratégia da clínica de reativa para proativa.
+    - **Antes:** A clínica só percebia a perda do cliente após 180 dias de inatividade.
+    - **Agora:** O sistema gera uma "Lista de Ação" com precisão de 73%, permitindo que a equipe de retenção entre em contato com pacientes em risco antes que eles deixem de     frequentar a clínica, protegendo a receita recorrente.
 
 **Arquitetura da Solução**
 O processo funciona em um ciclo automatizado:
--**Extração:** O Data Warehouse gera um "retrato" atual dos pacientes ativos.
--**Inferência:** Um script Python carrega o modelo treinado (.pkl) e calcula a probabilidade.
--**Carga:** As probabilidades são salvas na coluna Probabilidade_Churn da tabela DIM_PACIENTE.
+- **Extração:** O Data Warehouse gera um "retrato" atual dos pacientes ativos.
+- **Inferência:** Um script Python carrega o modelo treinado (.pkl) e calcula a probabilidade.
+- **Carga:** As probabilidades são salvas na coluna Probabilidade_Churn da tabela DIM_PACIENTE.
 
 **Performance do Modelo (Dados de Validação):**
--Recall (Captura): 79% (Identifica 8 em cada 10 potenciais cancelamentos).
--Precision (Assertividade): 73% (A cada 100 alertas gerados, 73 são reais riscos de churn).
+- **Recall (Captura):** 79% (Identifica 8 em cada 10 potenciais cancelamentos).
+- **Precision (Assertividade):** 73% (A cada 100 alertas gerados, 73 são reais riscos de churn).
 
 ---
 
