@@ -1,3 +1,4 @@
+CREATE DATABASE 'sorriso_metalico'
 -- configurando data para o padrão brasileiro
 SET DATESTYLE TO POSTGRES, DMY ;
 
@@ -363,4 +364,22 @@ CREATE TABLE  tb_solicitacao_exame (
         REFERENCES tb_catalogo_exame (id_cat_exame)       
         ON DELETE RESTRICT
 );
+-- ============================================
+-- Chatbot
+-- ============================================
+-- Tabela feedback
 
+CREATE TABLE IF NOT EXISTS tb_feedback (
+    id SERIAL PRIMARY KEY,
+    id_consulta INTEGER NOT NULL,
+    dentista_atendimento INTEGER NOT NULL CHECK (dentista_atendimento BETWEEN 1 AND 10),
+    dentista_tecnica INTEGER NOT NULL CHECK (dentista_tecnica BETWEEN 1 AND 10),
+    dentista_empatia INTEGER NOT NULL CHECK (dentista_empatia BETWEEN 1 AND 10),
+    recepcionista_cordialidade INTEGER NOT NULL CHECK (recepcionista_cordialidade BETWEEN 1 AND 10),
+    recepcionista_eficiencia INTEGER NOT NULL CHECK (recepcionista_eficiencia BETWEEN 1 AND 10),
+    assistente_suporte INTEGER NOT NULL CHECK (assistente_suporte BETWEEN 1 AND 10),
+    clinica_limpeza INTEGER NOT NULL CHECK (clinica_limpeza BETWEEN 1 AND 10),
+    clinica_equipamentos INTEGER NOT NULL CHECK (clinica_equipamentos BETWEEN 1 AND 10),
+    clinica_ambiente INTEGER NOT NULL CHECK (clinica_ambiente BETWEEN 1 AND 10),
+    CONSTRAINT fk_consulta FOREIGN KEY (id_consulta) REFERENCES tb_consulta(id_consulta)
+);
